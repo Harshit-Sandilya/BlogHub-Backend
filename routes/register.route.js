@@ -7,11 +7,13 @@ router.route("/").post(async (req, res) => {
 	try {
 		const { email, password } = req.body;
 		const encryptedPassword = await bcrypt.hash(password, 10);
+
 		const newUser = new User({
 			email: email,
 			password: encryptedPassword,
 			blogs: [],
 		});
+
 		newUser
 			.save()
 			.then(() => res.status(201).json({ message: "New User Addition Success" }))

@@ -8,16 +8,12 @@ router.route("/").post(async (req, res) => {
 	const { email, password } = req.body;
 	const user = await User.findOne({ email });
 
-	if (!user) {
-		res.status(401).json({ message: "User Login Failed" });
-	}
-
-	if (bcrypt.compareSync(password, user.password)) {
+	if (user && bcrypt.compareSync(password, user.password)) {
 		const token = jwt.sign({ email: user.email, id: user._id }, process.env.JWT_SECRET);
 		res.status(200).json({ message: "User Login Accepted", data: token });
-	} else {
-		res.status(401).json({ message: "User Login Failed" });
 	}
+
+	res.status(401).json({ message: "User Login Failed" });
 });
 
 module.exports = router;
